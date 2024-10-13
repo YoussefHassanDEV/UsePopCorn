@@ -1,4 +1,4 @@
-import StarRating from "./StarRating";
+import StarRating from "../Stars/StarRating";
 
 export function Movie({ movie }) {
   return (
@@ -11,7 +11,7 @@ export function Movie({ movie }) {
           <span>{movie.Year}</span>
         </p>
       </div>
-      <span><StarRating size={20} messages={["Bad","Normal","Good","V.Good","Excelent"]}/></span>
+      <span><StarRating size={20} messages={["Bad", "Normal", "Good", "V.Good", "Excelent"]} /></span>
 
     </li>
   );
