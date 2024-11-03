@@ -12,23 +12,30 @@ import { tempMovieData } from "./Data/tempMovieData";
 import { tempWatchedData } from "./Data/tempWatchedData";
 import { Loader } from "./Loader";
 import { ErrorMessage } from "./ErrorMessage";
-import StarRating from "./Stars/StarRating";
+import { SelectedMovie } from "./SelectedMovie";
 export const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
-const KEY = 'bcdf72c6';
+export const KEY = 'bcdf72c6';
 export default function App() {
   const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
   const [isloading, SetIsLoading] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
-  // const Tempquery = "Batman"
   const [error, setError] = useState("");
   function handleSelectMovie(id) {
     setSelectedId(selectedId => id === selectedId ? null : id);
   }
   function handleCloseMovie() {
     setSelectedId(null)
+  }
+  function handleAddWatched(movie) {
+    setWatched(watched => [...watched, movie])
+  }
+  function handleDeleteWatched(id) {
+    setWatched((watched) => watched.filter((movie) =>
+      movie.imdbID !== id));
+
   }
   useEffect(
     function () {
@@ -83,10 +90,13 @@ export default function App() {
         <Box>
 
           {
-            selectedId ? <SelectedMovie selectedId={selectedId} onCloseMovie={handleCloseMovie} /> :
+            selectedId ? <SelectedMovie watched={watched} selectedId={selectedId} onCloseMovie={handleCloseMovie} onAddWatched={handleAddWatched} /> :
               <>
                 <Summary watched={watched} />
-                <WatchedList watched={watched} />
+                <WatchedList
+                  watched={watched}
+                  onDeleteWatched={handleDeleteWatched}
+                />
               </>
           }
         </Box>
@@ -96,50 +106,3 @@ export default function App() {
 }
 
 
-function SelectedMovie({ selectedId, onCloseMovie }) {
-  const [movie, setMovie] = useState({});
-  const [isloading, SetIsLoading] = useState(false);
-  const {
-    Title: title, Year: year, Poster: poster, Runtime: runtime,
-    imdbRating, Plot: plot, Released: released, Actors: actors,
-    Director: director, Genre: genre
-
-  } = movie
-  useEffect(function () {
-    async function getMovieDetails() {
-      SetIsLoading(true)
-      const res = await fetch(
-        `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
-      );
-      const data = await res.json();
-      setMovie(data)
-      SetIsLoading(false)
-    }
-    getMovieDetails()
-  }, [selectedId])
-  return (
-    <div className="details">
-
-      {isloading ? <Loader /> : <>  <header>
-        <button className="btn-back" onClick={onCloseMovie}>
-          &larr;
-        </button>
-        <img src={poster} alt={`Poster of ${movie}`} />
-        <div className="details-overview">
-          <h2>{title}</h2>
-          <p>{released} &bull; {runtime}</p>
-          <p>{genre}</p>
-          <p><span>⭐</span>{imdbRating}</p>
-        </div>
-      </header>
-        <section>
-          <div className="rating">
-            <StarRating maxRating={10} size={24} />
-          </div>
-          <p><em>{plot}</em></p>
-          <p>Starring {actors}</p>
-          <p>Directed by {director}</p>
-        </section></>}
-    </div>
-  );
-}

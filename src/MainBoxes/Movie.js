@@ -11,8 +11,6 @@ export function Movie({ movie,onSelectMovie }) {
           <span>{movie.Year}</span>
         </p>
       </div>
-      <span><StarRating size={20} messages={["Bad", "Normal", "Good", "V.Good", "Excelent"]} /></span>
-
     </li>
   );
 }
