@@ -49,7 +49,6 @@ export function SelectedMovie({ watched, selectedId, onCloseMovie, onAddWatched 
   
         return function () {
           document.title = "usePopcorn";
-          // console.log(`Clean up effect for movie ${title}`);
         };
       },
       [title]
