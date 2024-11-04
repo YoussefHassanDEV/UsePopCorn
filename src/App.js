@@ -60,9 +60,7 @@ export default function App() {
           setError("");
         }
         catch (err) {
-          console.log(err.message)
           if (err.name !== "AbortError") {
-            console.log(err.message);
             setError(err.message);
           }
         }
