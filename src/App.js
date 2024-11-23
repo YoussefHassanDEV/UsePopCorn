@@ -3,7 +3,7 @@ import { Main } from "./MainBoxes/Main.1";
 import { Numresults } from "./navigationBar/Numresults";
 import { Logo } from "./navigationBar/Logo";
 import { Search } from "./navigationBar/Search.1";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MovieList } from "./MainBoxes/MovieList"
 import { Box } from "./MainBoxes/Box";
 import { Summary } from "./MainBoxes/Summary"
