@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { KEY } from "./App";
 import { Loader } from "./Loader";
 import StarRating from "./Stars/StarRating";
@@ -7,6 +7,15 @@ export function SelectedMovie({ watched, selectedId, onCloseMovie, onAddWatched 
   const [movie, setMovie] = useState({});
   const [isloading, SetIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("")
+
+  const countRef = useRef(0)
+  useEffect(
+    function () {
+      if (userRating)
+        countRef.current = countRef.current + 1;
+    },
+    [userRating]
+  )
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId)
   const watchedUserrating = watched.find(movie => movie.imdbID
     === selectedId)?.userRating
@@ -23,20 +32,21 @@ export function SelectedMovie({ watched, selectedId, onCloseMovie, onAddWatched 
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)),
       userRating,
+      countRatingDecisions:countRef.current,
     }
     onAddWatched(newWatchedMovie)
     onCloseMovie();
   }
   useEffect(
     function () {
-      function callback (e) {
+      function callback(e) {
         if (e.code === 'Escape') {
           onCloseMovie();
         }
       }
-      document.addEventListener('keydown',callback );
-      return function(){
-        document.removeEventListener('keydown',callback);
+      document.addEventListener('keydown', callback);
+      return function () {
+        document.removeEventListener('keydown', callback);
       }
     }
     , [onCloseMovie]);
@@ -53,19 +63,19 @@ export function SelectedMovie({ watched, selectedId, onCloseMovie, onAddWatched 
       }
       getMovieDetails();
     }, [selectedId]);
-    
 
-    useEffect(
-      function () {
-        if (!title) return;
-        document.title = `${title}`;
-  
-        return function () {
-          document.title = "usePopcorn";
-        };
-      },
-      [title]
-    );
+
+  useEffect(
+    function () {
+      if (!title) return;
+      document.title = `${title}`;
+
+      return function () {
+        document.title = "usePopcorn";
+      };
+    },
+    [title]
+  );
   return (
     <div className="details">
 
@@ -100,8 +110,8 @@ export function SelectedMovie({ watched, selectedId, onCloseMovie, onAddWatched 
                 )}
               </>
             ) : (
-              <p>You rated with movie {watchedUserrating} 
-                 <span>⭐</span>
+              <p>You rated with movie {watchedUserrating}
+                <span>⭐</span>
               </p>
             )
             }
